@@ -91,7 +91,7 @@ public:
 	// End Actor interface
 
 	/** Handle pressing forwards */
-	void MoveForward(float Val);
+	virtual void MoveForward(float Val);
 
 	/** Setup the strings used on the hud */
 	void SetupInCarHUD();

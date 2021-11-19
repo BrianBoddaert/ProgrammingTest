@@ -11,8 +11,6 @@ AFuelCar::AFuelCar()
 {
 	m_pFuelComponent = CreateDefaultSubobject<UFuelComponent>(TEXT("FuelComponent"));
 	m_pFuelComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	m_pFuelComponent->SetRelativeLocation(FVector(-30, 0, 40));
-	m_pFuelComponent->SetWorldScale3D(FVector(0.4f, 0.4f, 0.4f));
 }
 
 void AFuelCar::Tick(float Delta)
@@ -22,17 +20,40 @@ void AFuelCar::Tick(float Delta)
 
 	float carSpeedKMH = FMath::Abs(pMovementComp->GetForwardSpeed()) * 0.036f;
 
-	//float throttleInput = GetVehicleMovementComponent()->GetThrottleInput();
 	m_pFuelComponent->UpdateFuel(Delta, carSpeedKMH, pMovementComp->GetEngineRotationSpeed(), pMovementComp->GetEngineMaxRotationSpeed());
 	
 }
 
 void AFuelCar::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	AWheeledVehicle::SetupPlayerInputComponent(PlayerInputComponent);
 
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AFuelCar::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ADigitalMindSoftPawn::MoveRight);
+	PlayerInputComponent->BindAxis(LookUpBinding);
+	PlayerInputComponent->BindAxis(LookRightBinding);
+
+	PlayerInputComponent->BindAction("Handbrake", IE_Pressed, this, &ADigitalMindSoftPawn::OnHandbrakePressed);
+	PlayerInputComponent->BindAction("Handbrake", IE_Released, this, &ADigitalMindSoftPawn::OnHandbrakeReleased);
+	PlayerInputComponent->BindAction("SwitchCamera", IE_Pressed, this, &ADigitalMindSoftPawn::OnToggleCamera);
+
+	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ADigitalMindSoftPawn::OnResetVR);
 	
+	PlayerInputComponent->BindAction("ToggleFuelComponentVisibility", IE_Pressed, this, &AFuelCar::ToggleFuelComponentVisibility);
 }
 
+void AFuelCar::MoveForward(float val)
+{
+	if (m_pFuelComponent->IsEmpty())
+		val = 0.0f;
+
+	GetVehicleMovementComponent()->SetThrottleInput(val);
+}
+
+void AFuelCar::ToggleFuelComponentVisibility()
+{
+	m_pFuelComponent->ToggleVisibility();
+}

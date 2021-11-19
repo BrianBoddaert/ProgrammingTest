@@ -23,6 +23,8 @@ public:
 		UFuelComponent* m_pFuelComponent = nullptr;
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
+	virtual void MoveForward(float val) override;
+	void ToggleFuelComponentVisibility();
 private:
 
 protected:
