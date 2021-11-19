@@ -114,7 +114,7 @@ public:
 	static const FName LookRightBinding;
 	static const FName EngineAudioRPM;
 
-private:
+protected:
 	/** 
 	 * Activate In-Car camera. Enable camera and sets visibility of incar hud display
 	 *
