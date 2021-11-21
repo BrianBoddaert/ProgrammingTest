@@ -198,6 +198,7 @@ void ADigitalMindSoftPawn::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ADigitalMindSoftPawn::OnResetVR); 
 }
 
+
 void ADigitalMindSoftPawn::MoveForward(float Val)
 {
 	GetVehicleMovementComponent()->SetThrottleInput(Val);

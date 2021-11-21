@@ -32,7 +32,7 @@ void UFuelComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	SetRelativeLocation(FVector(-30, 0, 40));
-	float baseScale = 0.4f;
+	float baseScale = 0.2f;
 	SetWorldScale3D(FVector(baseScale, baseScale, baseScale));
 	m_pMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(m_pMaterial, NULL);
 	SetMaterial(0, m_pMaterialInstanceDynamic);
@@ -44,10 +44,10 @@ void UFuelComponent::BeginPlay()
 void UFuelComponent::InitializeFuelConsumptionCurve()
 {
 	FVector bezierPoints[4];
-	bezierPoints[0] = FVector(0, 0, 0);
-	bezierPoints[1] = FVector(.5, 0, 0);
-	bezierPoints[2] = FVector(0, 0, 0);
-	bezierPoints[3] = FVector(1, 1, 0);
+	bezierPoints[0] = FVector(1, 1, 0);
+	bezierPoints[1] = FVector(1.5, 1, 0);
+	bezierPoints[2] = FVector(1, 1, 0);
+	bezierPoints[3] = FVector(2, 2, 0);
 
 	FOccluderVertexArray fuelConsumptionPoints;
 
@@ -70,20 +70,12 @@ void UFuelComponent::UpdateFuel(float deltaTime, float carSpeedKMH, float engine
 	// scale from 0 to 1 turns into 0 to 99 index to access bezier curve point
 	int throttleCurvePoint = engineRotationsFraction * (m_NumCurveSamples - 1);
 	// Uses a compile time set bezier curve to indicate current fuelConsumption increase.
-	float consumptionRate = m_BaseFuelConsumptionRate + m_FuelConsumptionCurvePoints[throttleCurvePoint];
+	m_CurrentFuelConsumptionRate = m_BaseFuelConsumptionRate * m_FuelConsumptionCurvePoints[throttleCurvePoint];
 
-	m_CurrentFuel -= consumptionRate * carSpeedKMDS;
+	m_CurrentFuel -= m_CurrentFuelConsumptionRate * carSpeedKMDS;
 
 	if (m_CurrentFuel < 0)
 		m_CurrentFuel = 0;
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, "Fuel:" + FString::SanitizeFloat(m_CurrentFuel));
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Purple, "EngineRotationsPerSecond:" + FString::SanitizeFloat(engineRotationsFraction));
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "consumptionRate:" + FString::SanitizeFloat(consumptionRate));
-	}
-
 }
 
 // Called every frame

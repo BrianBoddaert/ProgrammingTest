@@ -47,7 +47,7 @@ void AFuelCar::SetupPlayerInputComponent(class UInputComponent* PlayerInputCompo
 
 void AFuelCar::MoveForward(float val)
 {
-	if (m_pFuelComponent->IsEmpty())
+	if (m_pFuelComponent && m_pFuelComponent->IsEmpty())
 		val = 0.0f;
 
 	GetVehicleMovementComponent()->SetThrottleInput(val);
@@ -55,5 +55,11 @@ void AFuelCar::MoveForward(float val)
 
 void AFuelCar::ToggleFuelComponentVisibility()
 {
-	m_pFuelComponent->ToggleVisibility();
+	if (m_pFuelComponent)
+		m_pFuelComponent->ToggleVisibility();
 }
+
+//UFuelComponent* AFuelCar::GetFuelComponent() const;
+//{ 
+//	return m_pFuelComponent;
+//}

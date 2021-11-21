@@ -2,10 +2,10 @@
 
 #include "DigitalMindSoftGameMode.h"
 #include "FuelCar.h"
-#include "DigitalMindSoftHud.h"
+#include "FuelHud.h"
 
 ADigitalMindSoftGameMode::ADigitalMindSoftGameMode()
 {
 	DefaultPawnClass = AFuelCar::StaticClass();
-	HUDClass = ADigitalMindSoftHud::StaticClass();
+	HUDClass = AFuelHud::StaticClass();
 }

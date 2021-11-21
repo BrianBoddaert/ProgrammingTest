@@ -19,15 +19,18 @@ public:
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		UFuelComponent* m_pFuelComponent = nullptr;
+
+
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	virtual void MoveForward(float val) override;
 	void ToggleFuelComponentVisibility();
-private:
+
+	UFUNCTION(BlueprintCallable)
+		UFuelComponent* GetFuelComponent() const { return m_pFuelComponent;	}
 
 protected:
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UFuelComponent* m_pFuelComponent = nullptr;
 
 };

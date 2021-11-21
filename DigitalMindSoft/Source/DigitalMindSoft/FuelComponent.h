@@ -24,6 +24,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 		inline bool IsEmpty() const {return m_CurrentFuel <= 0;	}
 
+	UFUNCTION(BlueprintCallable)
+		inline float GetCurrentFuel() const { return m_CurrentFuel; }
+
+	UFUNCTION(BlueprintCallable)
+		inline float GetMaxFuel() const { return m_MaxFuelCapacity; }
+
+	UFUNCTION(BlueprintCallable)
+		inline float GetCurrentConsumption() const { return m_CurrentFuelConsumptionRate; }
+
+
+
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -42,7 +54,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float m_BaseFuelConsumptionRate = 1.0f; //would be const if Uproperty allowed it
 
-		
+	// in L/km
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float m_CurrentFuelConsumptionRate;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool m_Visible = true;
 
