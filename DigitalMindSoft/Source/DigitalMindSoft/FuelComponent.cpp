@@ -4,14 +4,13 @@
 #include "FuelComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
+#include "DigitalMindSoftPawn.h"
+#include "WheeledVehicleMovementComponent.h"
 
-//const int32 UFuelComponent::m_NumCurveSamples = 100; //would be const if Uproperty allowed it
 
 // Sets default values for this component's properties
 UFuelComponent::UFuelComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> baseFuelCompMesh(TEXT("/Game/Geometry/Meshes/1M_Cube"));
@@ -22,6 +21,7 @@ UFuelComponent::UFuelComponent()
 	if (baseFuelCompMaterial.Succeeded())
 		m_pMaterial = baseFuelCompMaterial.Object;
 
+	// remove the static mesh's collision
 	SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
 	InitializeFuelConsumptionCurve();
@@ -51,7 +51,7 @@ void UFuelComponent::InitializeFuelConsumptionCurve()
 
 	FOccluderVertexArray fuelConsumptionPoints;
 
-	// Fuel consumption increase rate dependant on engine rotations using a bezier curve
+	// Fuel consumption increase rate dependent on engine rotations using a bezier curve
 	FVector::EvaluateBezier(bezierPoints, m_NumCurveSamples, fuelConsumptionPoints);
 
 	// Only need one dimension.
@@ -63,9 +63,9 @@ void UFuelComponent::UpdateFuel(float deltaTime, float carSpeedKMH, float engine
 {
 	// Converts to KM/S
 	float carSpeedKMS = carSpeedKMH / 3600;
-	// Considering deltaTime to see how many kilometers the player travelled in the last frame
+	// Considering deltaTime to see how many kilometers the player traveled in the last frame
 	float carSpeedKMDS = carSpeedKMS * deltaTime;
-	// puts engine rotations on a scale of 0 to 1 dependant on the max 
+	// puts engine rotations on a scale of 0 to 1 dependent on the max 
 	float engineRotationsFraction = engineRotations / maxEngineRotations;
 	// scale from 0 to 1 turns into 0 to 99 index to access bezier curve point
 	int throttleCurvePoint = engineRotationsFraction * (m_NumCurveSamples - 1);
@@ -83,8 +83,11 @@ void UFuelComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	UWheeledVehicleMovementComponent*  pMovementComp = Cast<ADigitalMindSoftPawn>(GetOwner())->GetVehicleMovement();
+	float carSpeedKMH = FMath::Abs(pMovementComp->GetForwardSpeed()) * 0.036f;
+	UpdateFuel(DeltaTime, carSpeedKMH, pMovementComp->GetEngineRotationSpeed(), pMovementComp->GetEngineMaxRotationSpeed());
+
 	ChangeVisualAspectDependingOnFuel();
-	// ...
 }
 
 void UFuelComponent::ChangeVisualAspectDependingOnFuel()
@@ -97,11 +100,11 @@ void UFuelComponent::ChangeVisualAspectDependingOnFuel()
 	// 0 to 1 how much fuel there is left compared to the max
 	float fuelFraction = m_CurrentFuel / m_MaxFuelCapacity;
 
-	// Set the color red dependant on the current fuel
+	// Set the color red dependent on the current fuel
 	FLinearColor color{ 1 - fuelFraction,0,0 };
 	m_pMaterialInstanceDynamic->SetVectorParameterValue(TEXT("MainColor"), color);
 
-	// Rescale the box's Z axis dependant on the current fuel
+	// Rescale the box's Z axis dependent on the current fuel
 	FVector newScale{};
 	newScale = GetWorldScale3D();
 	newScale.Z = m_BaseScaleY * (fuelFraction);
@@ -115,7 +118,6 @@ void UFuelComponent::ChangeVisualAspectDependingOnFuel()
 // Function that was not in USceneComponent for some reason
 FVector UFuelComponent::GetWorldScale3D() const
 {
-
 	// If attached to something, transform into local space
 	if (GetAttachParent() != nullptr && !IsUsingAbsoluteScale())
 	{

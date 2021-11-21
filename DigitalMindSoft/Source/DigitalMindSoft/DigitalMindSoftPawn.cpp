@@ -18,7 +18,7 @@
 #include "GameFramework/Controller.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/PlayerController.h"
-
+#include "FuelComponent.h"
 #ifndef HMD_MODULE_INCLUDED
 #define HMD_MODULE_INCLUDED 0
 #endif
@@ -177,6 +177,9 @@ ADigitalMindSoftPawn::ADigitalMindSoftPawn()
 
 	bIsLowFriction = false;
 	bInReverseGear = false;
+
+	m_pFuelComponent = CreateDefaultSubobject<UFuelComponent>(TEXT("FuelComponent"));
+	m_pFuelComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 void ADigitalMindSoftPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -199,9 +202,12 @@ void ADigitalMindSoftPawn::SetupPlayerInputComponent(class UInputComponent* Play
 }
 
 
-void ADigitalMindSoftPawn::MoveForward(float Val)
+void ADigitalMindSoftPawn::MoveForward(float val)
 {
-	GetVehicleMovementComponent()->SetThrottleInput(Val);
+	if (m_pFuelComponent && m_pFuelComponent->IsEmpty())
+		val = 0.0f;
+
+	GetVehicleMovementComponent()->SetThrottleInput(val);
 
 }
 

@@ -1,11 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DigitalMindSoftGameMode.h"
-#include "FuelCar.h"
+#include "DigitalMindSoftPawn.h"
 #include "FuelHud.h"
 
 ADigitalMindSoftGameMode::ADigitalMindSoftGameMode()
 {
-	DefaultPawnClass = AFuelCar::StaticClass();
+	DefaultPawnClass = ADigitalMindSoftPawn::StaticClass();
 	HUDClass = AFuelHud::StaticClass();
 }

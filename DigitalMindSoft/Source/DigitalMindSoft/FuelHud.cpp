@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FuelHud.h"
-#include "FuelCar.h"
+#include "DigitalMindSoftPawn.h"
 #include "FuelComponent.h"
 #include "Engine/Canvas.h"
 #include "Engine/Font.h"
@@ -29,8 +29,12 @@ void AFuelHud::DrawHUD()
 	const float HUDXRatio = Canvas->SizeX / 1280.f;
 	const float HUDYRatio = Canvas->SizeY / 720.f;
 
-	AFuelCar* Vehicle = Cast<AFuelCar>(GetOwningPawn());
-	UFuelComponent* fuelComp = Vehicle->GetFuelComponent();
+	ADigitalMindSoftPawn* Vehicle = Cast<ADigitalMindSoftPawn>(GetOwningPawn());
+	UFuelComponent* fuelComp = Cast<UFuelComponent>(Vehicle->GetComponentByClass(UFuelComponent::StaticClass()));
+
+	if (!fuelComp)
+		return;
+
 	const float maxFuel = fuelComp->GetMaxFuel();
 	const float currentFuel = fuelComp->GetCurrentFuel();
 	const float lowfuelIndicatorActivationFraction = 0.3f;

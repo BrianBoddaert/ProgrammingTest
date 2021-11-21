@@ -12,6 +12,7 @@ class USpringArmComponent;
 class UTextRenderComponent;
 class UInputComponent;
 class UAudioComponent;
+class UFuelComponent;
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
@@ -91,7 +92,7 @@ public:
 	// End Actor interface
 
 	/** Handle pressing forwards */
-	virtual void MoveForward(float Val);
+	void MoveForward(float Val);
 
 	/** Setup the strings used on the hud */
 	void SetupInCarHUD();
@@ -132,6 +133,8 @@ protected:
 	/** Non Slippery Material instance */
 	UPhysicalMaterial* NonSlipperyMaterial;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UFuelComponent* m_pFuelComponent = nullptr;
 
 public:
 	/** Returns SpringArm subobject **/

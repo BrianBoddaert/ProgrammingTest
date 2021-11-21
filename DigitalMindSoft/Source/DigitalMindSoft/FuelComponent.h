@@ -33,9 +33,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		inline float GetCurrentConsumption() const { return m_CurrentFuelConsumptionRate; }
 
-
-
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -55,7 +52,7 @@ protected:
 		float m_BaseFuelConsumptionRate = 1.0f; //would be const if Uproperty allowed it
 
 	// in L/km
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float m_CurrentFuelConsumptionRate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
