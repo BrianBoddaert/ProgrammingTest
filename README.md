@@ -8,6 +8,7 @@ The only thing altered about the car is the adding of the fuel component as a UP
 I also added a check if the fuel component is out of fuel so the car stops moving.
 
 As the car loses fuel, the fuel component becomes more red and scaled down on the Z-Axis.
+
 When the car is low on fuel a flickering yellow icon should show up.
 When the car is really low on fuel it turns red and flickers faster.
 
