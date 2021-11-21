@@ -7,6 +7,9 @@ The only thing altered about the car is the adding of the fuel component as a UP
 
 I also added a check if the fuel component is out of fuel so the car stops moving.
 
+When the car is low on fuel a flickering yellow icon should show up.
+When the car is really low on fuel it turns red and flickers faster.
+
 The car is not dependent on the component.
 
 
